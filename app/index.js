@@ -1,1 +1,1 @@
-window.alert("Hello World!");
+import Hello from './hello.jsx';
