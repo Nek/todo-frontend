@@ -1,0 +1,9 @@
+{
+  "name": "todo-frontend",
+  "version": "1.0.0",
+  "description": "Todo frontend.",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Nikita Dudnik <nikdudnik@gmail.com>"
+}
