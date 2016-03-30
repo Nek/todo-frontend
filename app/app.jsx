@@ -152,6 +152,17 @@ export default class App extends React.Component {
 		const todos = tempTodos.insert(to, id);
 
 		this.setState({todos});
+
+		fetch(apiRoot + '/todos/ordering', {
+			method: 'put',
+			body: JSON.stringify(todos),
+			headers: {
+				'Content-Type': 'application/json; charset=utf-8'
+			},
+		})
+		.catch(function(err) {
+
+		});
 	}
 	generateUUID() {
 		return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
