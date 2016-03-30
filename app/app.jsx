@@ -79,15 +79,36 @@ export default class App extends React.Component {
 
 	}
 	toggleTodo(id) {
-		const oldTodosById = this.state.todosById;
-		const oldTodo = oldTodosById.get(id);
+		const oldTodo = this.state.todosById.get(id);
 
-		const todosById = oldTodosById.set(id, new Todo({
-			done: !oldTodo.get('done'),
-			description: oldTodo.get('description'),
-			id: id
-		}));
-		this.setState({todosById});
+		fetch(apiRoot + '/todos/' + id, {
+			method: 'post',
+			body: JSON.stringify({
+				done: !oldTodo.get('done'),
+				description: oldTodo.get('description'),
+				id: id
+			}),
+			headers: {
+				'Content-Type': 'application/json; charset=utf-8'
+			}
+		})
+		.then(function(response) {
+			return response.json();
+		})
+		.then(function(todoJson) {
+			const id = todoJson.id;
+			const oldTodosById = this.state.todosById;
+
+			const todosById = oldTodosById.set(id, new Todo({
+				done: todoJson.done,
+				description: todoJson.description,
+				id: todoJson.id
+			}));
+			this.setState({todosById});
+		}.bind(this))
+		.catch(function(err) {
+
+		});
 	}
 	completeAllTodos() {
 		const oldTodosById = this.state.todosById;
