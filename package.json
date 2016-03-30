@@ -9,6 +9,7 @@
   "author": "Nikita Dudnik <nikdudnik@gmail.com>",
   "dependencies": {
     "react": "^0.14.7",
+    "react-bootstrap": "^0.28.4",
     "react-dom": "^0.14.7"
   },
   "license": "MIT",
@@ -25,7 +26,7 @@
       "ecmaVersion": 6,
       "sourceType": "module",
       "ecmaFeatures": {
-          "jsx": true
+        "jsx": true
       }
     }
   }
