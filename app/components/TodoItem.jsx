@@ -2,25 +2,24 @@ import React from 'react';
 import {Input, ListGroupItem} from 'react-bootstrap';
 
 
-export default class Todo extends React.Component {
+export default class TodoItem extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {done: this.props.done};
-		this.handleClick = this.handleClick.bind(this);
+		this.handleChange = this.handleChange.bind(this);
 	}
-	handleClick() {
-		this.props.onToggle(this.state.id);
+	handleChange() {
+		this.props.onToggle(this.props.id);
 	}
 	render() {
 		const text = this.props.description || 'Do something';
-		const label = <span style={{textDecoration: this.state.done ? 'line-through' : undefined}}>{text}</span>;
+		const label = <span style={{textDecoration: this.props.done ? 'line-through' : undefined}}>{text}</span>;
 		return <ListGroupItem className='todo-item'>
-					<Input onClick={this.props.handleClick} type="checkbox" label={label} checked={this.state.done} />
+					<Input onChange={this.handleChange} type="checkbox" label={label} checked={this.props.done} />
 				</ListGroupItem>
 	}
 }
 
-Todo.propTypes = {
+TodoItem.propTypes = {
 	id: React.PropTypes.string.isRequired,
 	description: React.PropTypes.string.isRequired,
 	done: React.PropTypes.bool.isRequired,

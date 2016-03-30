@@ -8,8 +8,8 @@
   },
   "author": "Nikita Dudnik <nikdudnik@gmail.com>",
   "dependencies": {
+    "immutable": "^3.7.6",
     "react": "^0.14.8",
-    "react-addons-update": "^0.14.8",
     "react-bootstrap": "^0.28.4",
     "react-dom": "^0.14.7"
   },
