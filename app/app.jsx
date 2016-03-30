@@ -122,7 +122,25 @@ export default class App extends React.Component {
 					id: todo.get('id')
 				});}
 			);
-		this.setState({todosById});
+		const todosJoined = this.state.todos.map((item) => {
+			return todosById.get(item);
+		});
+
+		fetch(apiRoot + '/todos', {
+			method: 'put',
+			body: JSON.stringify(todosJoined),
+			headers: {
+				'Content-Type': 'application/json; charset=utf-8'
+			},
+		})
+		.then(function(response) {
+			this.setState({todosById});
+		}.bind(this))
+		.then(function(todoJson) {
+		}.bind(this))
+		.catch(function(err) {
+
+		});
 	}
 	moveTodo(id, toId) {
 		const oldTodos = this.state.todos;
