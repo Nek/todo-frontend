@@ -7,33 +7,42 @@ export default class App extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			todos: [
-				{
-					done: false,
-					description: "Wash dishes",
-					id: "id1"
-				},
-				{
-					done: true,
-					description: "Clean car",
-					id: "id2"
-				},
-				{
-					done: false,
-					description: "Pay rent",
-					id: "id3"
-				}]
-		}
+			todosById: {
+					"id1" : {
+						done: false,
+						description: "Wash dishes",
+						id: "id1"
+					},
+					"id2" : {
+						done: true,
+						description: "Clean car",
+						id: "id2"
+					},
+					"id3" : {
+						done: false,
+						description: "Pay rent",
+						id: "id3"
+					}},
+			todos: ["id1", "id2", "id3"]};
+
+		this.addTodo = this.addTodo.bind(this);
 		this.addTodo = this.addTodo.bind(this);
 	}
 	addTodo(text) {
-		let todos = this.state.todos;
-		todos.push({
+		const id = this.generateUUID();
+		const todosById = this.state.todosById;
+		const todos = this.state.todos;
+
+		todosById[id] = {
 			done: false,
 			description: text,
-			id: this.generateUUID()
-		});
-		this.setState({todos});
+			id
+		};
+		todos.push(id);
+		this.setState({todosById, todos});
+	}
+	toggleTodo(id) {
+
 	}
 	generateUUID() {
 		return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
@@ -52,7 +61,11 @@ export default class App extends React.Component {
 				<Col md={3}><a>Mark all as complete</a></Col>
 			</Row>
 		);
-		const todos = this.state.todos.map(({id, description, done}) => <Todo id={id} description={description} done={done}/>);
+		const todos = this.state.todos.map((id) => 
+			{
+				const {description, done} = this.state.todosById[id];
+				return <Todo id={id} description={description} done={done} onToggle={this.toggleTodo}/>
+			});
 		return <Row>
 			<Col md={2}/>
 			<Col md={8}>
