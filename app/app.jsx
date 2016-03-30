@@ -51,24 +51,32 @@ export default class App extends React.Component {
 			method: 'post',
 			body: JSON.stringify(new Todo({
 				description: text
-			}))
-		}).then(function(response) {
-			console.log(response.json());
+			})),
+			headers: {
+				'Content-Type': 'application/json; charset=utf-8'
+			},
 		})
+		.then(function(response) {
+			return response.json();
+		})
+		.then(function(todoJson) {
+			const id = todoJson.id;
+
+			const oldTodosById = this.state.todosById;
+			const oldTodos = this.state.todos;
+
+			const todosById = oldTodosById.set(id, new Todo({
+				done: todoJson.done,
+				description: todoJson.description,
+				id: id
+			}));
+			const todos = oldTodos.push(id);
+			this.setState({todosById, todos});
+		}.bind(this))
 		.catch(function(err) {
 
 		});
-		// const id = this.generateUUID();
-		// const oldTodosById = this.state.todosById;
-		// const oldTodos = this.state.todos;
 
-		// const todosById = oldTodosById.set(id, new Todo({
-		// 	done: false,
-		// 	description: text,
-		// 	id
-		// }));
-		// const todos = oldTodos.push(id);
-		// this.setState({todosById, todos});
 	}
 	toggleTodo(id) {
 		const oldTodosById = this.state.todosById;
