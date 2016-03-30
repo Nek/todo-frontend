@@ -65,9 +65,11 @@ export default class App extends React.Component {
 			<h1>Todos</h1>
 		);
 
+		const itemsLeft = this.state.todosById.filter((todo) => !todo.get('done')).length;
+
 		const footer = (
 			<Row>
-				<Col md={9}><span>2 items left</span></Col>
+				<Col md={9}><span>{itemsLeft} {itemsLeft === 1 ? 'item' : 'items'} left</span></Col>
 				<Col md={3}><a>Mark all as complete</a></Col>
 			</Row>
 		);
