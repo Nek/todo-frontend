@@ -28,6 +28,7 @@ export default class App extends React.Component {
 
 		this.addTodo = this.addTodo.bind(this);
 		this.toggleTodo = this.toggleTodo.bind(this);
+		this.completeAllTodos = this.completeAllTodos.bind(this);
 	}
 	addTodo(text) {
 		const id = this.generateUUID();
@@ -43,7 +44,6 @@ export default class App extends React.Component {
 		this.setState({todosById, todos});
 	}
 	toggleTodo(id) {
-		const oldTodos = this.state.todos;
 		const oldTodosById = this.state.todosById;
 		const oldTodo = oldTodosById.get(id);
 
@@ -52,6 +52,20 @@ export default class App extends React.Component {
 			description: oldTodo.get('description'),
 			id: id
 		}));
+		this.setState({todosById});
+	}
+	completeAllTodos() {
+		const oldTodosById = this.state.todosById;
+		const todosById = oldTodosById.map(
+			(todo) => {
+				const done = todo.get('done');
+				if (done) return todo;
+				return new Todo({
+					done: true,
+					description: todo.get('description'),
+					id: todo.get('id')
+				});}
+			);
 		this.setState({todosById});
 	}
 	generateUUID() {
@@ -65,12 +79,12 @@ export default class App extends React.Component {
 			<h1>Todos</h1>
 		);
 
-		const itemsLeft = this.state.todosById.filter((todo) => !todo.get('done')).length;
+		const itemsLeft = this.state.todosById.filter((todo) => !todo.get('done')).count();
 
 		const footer = (
 			<Row>
 				<Col md={9}><span>{itemsLeft} {itemsLeft === 1 ? 'item' : 'items'} left</span></Col>
-				<Col md={3}><a>Mark all as complete</a></Col>
+				<Col md={3}><a className='link-button' onClick={this.completeAllTodos}>Mark all as complete</a></Col>
 			</Row>
 		);
 		const todos = this.state.todos.map((id) => 

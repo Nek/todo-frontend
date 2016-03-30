@@ -7,3 +7,8 @@
 .todo-item:nth-child(even) {
 	background: #EEE
 }
+
+.link-button {
+	cursor: pointer; 
+	cursor: hand; 
+}
