@@ -1,10 +1,11 @@
 import React from 'react';
 import {Map, List, Record} from 'immutable';
-import {Panel, Input, ListGroup, ListGroupItem, Button, Row, Col} from 'react-bootstrap';
-import TodoItem from './components/TodoItem.jsx';
-import InputWidget from './components/InputWidget.jsx';
 import Todo from './types/Todo';
 
+import {Panel, Button, Row, Col} from 'react-bootstrap';
+import TodoItem from './components/TodoItem.jsx';
+import InputWidget from './components/InputWidget.jsx';
+import TodoItemsList from './components/TodoItemsList.jsx';
 
 export default class App extends React.Component {
 	constructor(props) {
@@ -29,6 +30,7 @@ export default class App extends React.Component {
 		this.addTodo = this.addTodo.bind(this);
 		this.toggleTodo = this.toggleTodo.bind(this);
 		this.completeAllTodos = this.completeAllTodos.bind(this);
+		this.moveTodo = this.moveTodo.bind(this);
 	}
 	addTodo(text) {
 		const id = this.generateUUID();
@@ -68,6 +70,17 @@ export default class App extends React.Component {
 			);
 		this.setState({todosById});
 	}
+	moveTodo(id, toId) {
+		const oldTodos = this.state.todos;
+
+		const from = oldTodos.indexOf(id);
+		const to = oldTodos.indexOf(toId);
+		
+		const tempTodos = oldTodos.splice(from, 1);
+		const todos = tempTodos.insert(to, id);
+
+		this.setState({todos});
+	}
 	generateUUID() {
 		return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
 			var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
@@ -90,16 +103,14 @@ export default class App extends React.Component {
 		const todos = this.state.todos.map((id) => 
 			{
 				const {description, done} = this.state.todosById.get(id);
-				return <TodoItem id={id} description={description} done={done} onToggle={this.toggleTodo}/>
+				return <TodoItem onMove={this.moveTodo} id={id} description={description} done={done} onToggle={this.toggleTodo}/>
 			});
 		return <Row>
 			<Col md={2}/>
 			<Col md={8}>
 				<Panel header={title} footer={footer}>
 					<InputWidget onSubmit={this.addTodo}/>
-					<ListGroup fill>
-						{todos}
-					</ListGroup>
+					<TodoItemsList items={todos}/>
 				</Panel>
 			</Col>
 			<Col md={2}/>
