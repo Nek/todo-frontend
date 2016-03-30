@@ -7,30 +7,44 @@ import TodoItem from './components/TodoItem.jsx';
 import InputWidget from './components/InputWidget.jsx';
 import TodoItemsList from './components/TodoItemsList.jsx';
 
+const apiRoot = '/api/v1';
+
 export default class App extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			todosById: Map({
-					"id1" : new Todo({
-						description: "Wash dishes",
-						id: "id1"
-					}),
-					"id2" : new Todo({
-						done: true,
-						description: "Clean car",
-						id: "id2"
-					}),
-					"id3" : new Todo({
-						description: "Pay rent",
-						id: "id3"
-					})}),
-			todos: List(["id1", "id2", "id3"])};
+			todosById: Map(),
+			todos: List()
+		};
 
 		this.addTodo = this.addTodo.bind(this);
 		this.toggleTodo = this.toggleTodo.bind(this);
 		this.completeAllTodos = this.completeAllTodos.bind(this);
 		this.moveTodo = this.moveTodo.bind(this);
+	}
+	componentDidMount() {
+		fetch(apiRoot + '/todos', {
+			method: 'get'
+		}).then(function(response) {
+			return response.json();
+		})
+		.then(function(data) {
+			const todosById = Map(data.reduce((map, item) => {
+				return map.set(item.id, new Todo({
+					done: item.done,
+					description: item.description,
+					id: item.id
+				}));
+			}, Map()));
+			const todos = List(data.map((item => {
+				return item.id;
+			})));
+
+			this.setState({todosById, todos});
+		}.bind(this))
+		.catch(function(err) {
+			// Error :(
+		});
 	}
 	addTodo(text) {
 		const id = this.generateUUID();
@@ -75,7 +89,7 @@ export default class App extends React.Component {
 
 		const from = oldTodos.indexOf(id);
 		const to = oldTodos.indexOf(toId);
-		
+
 		const tempTodos = oldTodos.splice(from, 1);
 		const todos = tempTodos.insert(to, id);
 

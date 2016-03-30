@@ -1,3 +1,5 @@
+var webpack = require('webpack');
+
 module.exports = {
 	devtool: 'source-map',
 	context: __dirname + "/app",
@@ -17,5 +19,11 @@ module.exports = {
 				}
 			}
 		]
-	}
+
+	},
+	plugins: [
+			new webpack.ProvidePlugin({
+				'fetch': 'imports?this=>global!exports?global.fetch!whatwg-fetch'
+			})
+		]
 }
